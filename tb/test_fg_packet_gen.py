@@ -53,6 +53,7 @@ def dut_fg_packet_gen(clk,
                        output_hdr_valid,
                        output_hdr_ready,
                        output_hdr_dest,
+                       output_hdr_len,
                        output_payload_tdata,
                        output_payload_tkeep,
                        output_payload_tvalid,
@@ -78,6 +79,7 @@ def dut_fg_packet_gen(clk,
                 output_hdr_valid=output_hdr_valid,
                 output_hdr_ready=output_hdr_ready,
                 output_hdr_dest=output_hdr_dest,
+                output_hdr_len=output_hdr_len,
                 output_payload_tdata=output_payload_tdata,
                 output_payload_tkeep=output_payload_tkeep,
                 output_payload_tvalid=output_payload_tvalid,
@@ -106,6 +108,7 @@ def bench():
     input_bd_ready = Signal(bool(0))
     output_hdr_valid = Signal(bool(0))
     output_hdr_dest = Signal(intbv(0)[8:])
+    output_hdr_len = Signal(intbv(0)[16:])
     output_payload_tdata = Signal(intbv(0)[64:])
     output_payload_tkeep = Signal(intbv(0)[8:])
     output_payload_tvalid = Signal(bool(0))
@@ -154,6 +157,7 @@ def bench():
                           output_hdr_valid,
                           output_hdr_ready,
                           output_hdr_dest,
+                          output_hdr_len,
                           output_payload_tdata,
                           output_payload_tkeep,
                           output_payload_tvalid,
@@ -193,6 +197,7 @@ def bench():
         yield clk.posedge
 
         payload_mtu.next = 100
+        output_hdr_ready.next = 1
 
         yield clk.posedge
         print("test 1: test packet")
@@ -221,6 +226,7 @@ def bench():
                 total += len(rx_frame.data)
 
             assert total == test_bd.burst_len
+            assert output_hdr_len == test_bd.burst_len
 
             yield delay(100)
 

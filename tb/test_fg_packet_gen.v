@@ -49,6 +49,7 @@ reg [15:0] payload_mtu = 0;
 wire input_bd_ready;
 wire output_hdr_valid;
 wire [7:0] output_hdr_dest;
+wire [15:0] output_hdr_len;
 wire [63:0] output_payload_tdata;
 wire [7:0] output_payload_tkeep;
 wire output_payload_tvalid;
@@ -70,6 +71,7 @@ initial begin
     $to_myhdl(input_bd_ready,
               output_hdr_valid,
               output_hdr_dest,
+              output_hdr_len,
               output_payload_tdata,
               output_payload_tkeep,
               output_payload_tvalid,
@@ -99,6 +101,7 @@ UUT (
     .output_hdr_valid(output_hdr_valid),
     .output_hdr_ready(output_hdr_ready),
     .output_hdr_dest(output_hdr_dest),
+    .output_hdr_len(output_hdr_len),
     .output_payload_tdata(output_payload_tdata),
     .output_payload_tkeep(output_payload_tkeep),
     .output_payload_tvalid(output_payload_tvalid),

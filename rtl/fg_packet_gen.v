@@ -52,6 +52,7 @@ module fg_packet_gen #(
     output wire                   output_hdr_valid,
     input  wire                   output_hdr_ready,
     output wire [DEST_WIDTH-1:0]  output_hdr_dest,
+    output wire [15:0]            output_hdr_len,
     output wire [DATA_WIDTH-1:0]  output_payload_tdata,
     output wire [KEEP_WIDTH-1:0]  output_payload_tkeep,
     output wire                   output_payload_tvalid,
@@ -84,6 +85,7 @@ reg input_bd_ready_reg = 0, input_bd_ready_next;
 
 reg output_hdr_valid_reg = 0, output_hdr_valid_next;
 reg [DEST_WIDTH-1:0] output_hdr_dest_reg = 0, output_hdr_dest_next;
+reg [15:0] output_hdr_len_reg = 0, output_hdr_len_next;
 
 reg busy_reg = 0;
 
@@ -100,6 +102,7 @@ assign input_bd_ready = input_bd_ready_reg;
 
 assign output_hdr_valid = output_hdr_valid_reg;
 assign output_hdr_dest = output_hdr_dest_reg;
+assign output_hdr_len = output_hdr_len_reg;
 
 assign busy = busy_reg;
 
@@ -113,6 +116,7 @@ always @* begin
 
     output_hdr_valid_next = output_hdr_valid_reg & ~output_hdr_ready;
     output_hdr_dest_next = output_hdr_dest_reg;
+    output_hdr_len_next = output_hdr_len_reg;
 
     output_payload_tdata_int = 0;
     output_payload_tkeep_int = 0;
@@ -138,9 +142,13 @@ always @* begin
                 if (burst_len_reg > payload_mtu) begin
                     frame_len_next = payload_mtu;
                     burst_len_next = burst_len_reg - payload_mtu;
+                    output_hdr_valid_next = 1;
+                    output_hdr_len_next = payload_mtu;
                 end else begin
                     frame_len_next = burst_len_reg;
                     burst_len_next = 0;
+                    output_hdr_valid_next = 1;
+                    output_hdr_len_next = burst_len_reg;
                 end
 
                 state_next = STATE_FRAME;
@@ -181,6 +189,7 @@ always @(posedge clk or posedge rst) begin
         input_bd_ready_reg <= 0;
         output_hdr_valid_reg <= 0;
         output_hdr_dest_reg <= 0;
+        output_hdr_len_reg <= 0;
         busy_reg <= 0;
     end else begin
         state_reg <= state_next;
@@ -189,6 +198,7 @@ always @(posedge clk or posedge rst) begin
         input_bd_ready_reg <= input_bd_ready_next;
         output_hdr_valid_reg <= output_hdr_valid_next;
         output_hdr_dest_reg <= output_hdr_dest_next;
+        output_hdr_len_reg <= output_hdr_len_next;
         busy_reg <= state_next != STATE_IDLE;
     end
 end
