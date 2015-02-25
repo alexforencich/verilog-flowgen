@@ -92,13 +92,18 @@ def dut_fg_packet_gen(clk,
 
 def bench():
 
+    # Parameters
+    DEST_WIDTH = 8
+    DATA_WIDTH = 64
+    KEEP_WIDTH = (DATA_WIDTH/8)
+
     # Inputs
     clk = Signal(bool(0))
     rst = Signal(bool(0))
     current_test = Signal(intbv(0)[8:])
 
     input_bd_valid = Signal(bool(0))
-    input_bd_dest = Signal(intbv(0)[8:])
+    input_bd_dest = Signal(intbv(0)[DEST_WIDTH:])
     input_bd_burst_len = Signal(intbv(0)[32:])
     output_payload_tready = Signal(bool(0))
     output_hdr_ready = Signal(bool(0))
@@ -107,10 +112,10 @@ def bench():
     # Outputs
     input_bd_ready = Signal(bool(0))
     output_hdr_valid = Signal(bool(0))
-    output_hdr_dest = Signal(intbv(0)[8:])
+    output_hdr_dest = Signal(intbv(0)[DEST_WIDTH:])
     output_hdr_len = Signal(intbv(0)[16:])
-    output_payload_tdata = Signal(intbv(0)[64:])
-    output_payload_tkeep = Signal(intbv(0)[8:])
+    output_payload_tdata = Signal(intbv(0)[DATA_WIDTH:])
+    output_payload_tkeep = Signal(intbv(0)[KEEP_WIDTH:])
     output_payload_tvalid = Signal(bool(0))
     output_payload_tlast = Signal(bool(0))
     output_payload_tuser = Signal(bool(0))

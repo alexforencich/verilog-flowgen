@@ -91,13 +91,17 @@ def dut_fg_fd_fifo(clk,
 
 def bench():
 
+    # Parameters
+    ADDR_WIDTH = 10
+    DEST_WIDTH = 8
+
     # Inputs
     clk = Signal(bool(0))
     rst = Signal(bool(0))
     current_test = Signal(intbv(0)[8:])
 
     input_fd_valid = Signal(bool(0))
-    input_fd_dest = Signal(intbv(0)[8:])
+    input_fd_dest = Signal(intbv(0)[DEST_WIDTH:])
     input_fd_rate_num = Signal(intbv(0)[16:])
     input_fd_rate_denom = Signal(intbv(0)[16:])
     input_fd_len = Signal(intbv(0)[32:])
@@ -107,14 +111,14 @@ def bench():
     # Outputs
     input_fd_ready = Signal(bool(0))
     output_fd_valid = Signal(bool(0))
-    output_fd_dest = Signal(intbv(0)[8:])
+    output_fd_dest = Signal(intbv(0)[DEST_WIDTH:])
     output_fd_rate_num = Signal(intbv(0)[16:])
     output_fd_rate_denom = Signal(intbv(0)[16:])
     output_fd_len = Signal(intbv(0)[32:])
     output_fd_burst_len = Signal(intbv(0)[32:])
 
-    count = Signal(intbv(0)[10:])
-    byte_count = Signal(intbv(0)[42:])
+    count = Signal(intbv(0)[ADDR_WIDTH:])
+    byte_count = Signal(intbv(0)[ADDR_WIDTH+32:])
 
     # sources and sinks
     source_queue = Queue()

@@ -86,13 +86,18 @@ def dut_fg_burst_gen(clk,
 
 def bench():
 
+    # Parameters
+    FLOW_ADDR_WIDTH = 5
+    DEST_WIDTH = 8
+    RATE_SCALE = 8
+
     # Inputs
     clk = Signal(bool(0))
     rst = Signal(bool(0))
     current_test = Signal(intbv(0)[8:])
 
     input_fd_valid = Signal(bool(0))
-    input_fd_dest = Signal(intbv(0)[8:])
+    input_fd_dest = Signal(intbv(0)[DEST_WIDTH:])
     input_fd_rate_num = Signal(intbv(0)[16:])
     input_fd_rate_denom = Signal(intbv(0)[16:])
     input_fd_len = Signal(intbv(0)[32:])
@@ -102,7 +107,7 @@ def bench():
     # Outputs
     input_fd_ready = Signal(bool(0))
     output_bd_valid = Signal(bool(0))
-    output_bd_dest = Signal(intbv(0)[8:])
+    output_bd_dest = Signal(intbv(0)[DEST_WIDTH:])
     output_bd_burst_len = Signal(intbv(0)[32:])
     busy = Signal(bool(0))
     active_flows = Signal(intbv(0)[5:])
